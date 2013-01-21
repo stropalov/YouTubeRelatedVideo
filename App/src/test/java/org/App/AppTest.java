@@ -24,39 +24,76 @@ package org.App;
  * #L%
  */
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.YoutubeConnector.ConnectionException;
+import org.junit.Test;
 
+
+import static org.junit.Assert.*;
 /**
- * Unit test for simple App.
+ * Unit test for App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest{
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	/**
+	 * Check the correct input Url (with "http://www....").
+	 */
+	@Test
+	public void testUrlValidatorWithWWW() throws ConnectionException {
+		String inputURL = "http://www.youtube.com/watch?v=YOdFtyv7yoQ";
+		UrlValidator validator = new UrlValidator(inputURL);
+		assertTrue(validator.isOk());
+	}
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	/**
+	 * Check the correct input Url (without "www....").
+	 */
+	@Test
+	public void testUrlValidatorWithoutWWW() throws ConnectionException {
+		String inputURL = "http://youtube.com/watch?v=L1bbN08o6Y4";
+		UrlValidator validator = new UrlValidator(inputURL);
+		assertTrue(validator.isOk());
+	}
+
+	/**
+	 * Check the correct input Url (short link "youtu.be").
+	 */
+	@Test
+	public void testShortLinkValidator() throws ConnectionException {
+		String inputURL = "http://youtu.be/ZW-YxvjiAhI";
+		UrlValidator validator = new UrlValidator(inputURL);
+		assertTrue(validator.isOk());
+	}
+
+	/**
+	 * Check the Url to the nonexistent video-page of youtube.com.
+	 */
+	@Test
+	public void testNonexistentPage() throws ConnectionException {
+		String inputURL = "http://www.youtube.com/watch?v=YOdFtysdfs";
+		UrlValidator validator = new UrlValidator(inputURL);
+		assertFalse(validator.isOk());
+	}
+
+	/**
+	 * If input Url is not youtube.com.
+	 */
+	@Test
+	public void testInvalidURLvalidator() throws ConnectionException {
+		String inputURL = "http://vimeo.com/56879439";
+		UrlValidator validator = new UrlValidator(inputURL);
+		assertFalse(validator.isOk());
+	}
+
+	/**
+	 * If input Url is not correct Url.
+	 */
+	@Test(expected=ConnectionException.class)
+	public void testNotURL() throws ConnectionException {
+		String inputURL = "youtube";
+		UrlValidator validator = new UrlValidator(inputURL);
+		validator.isOk();
+	}
+	
+	@Test
+
 }
